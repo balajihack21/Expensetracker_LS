@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Expense Tracker App</title>
+</head>
+<body>
+    <div id="signin">
+        <form>
+            <label for="name">Expense</label>
+            <input type="text" placeholder="Enter the name" name="name">
+            <label for="email">Description</label>
+            <input type="text" placeholder="Enter the email id" name="email">
+            <select>
+                <option value="food">Food</option>
+                <option value="shopping">Shopping</option>
+                <option value="House rent">House rent</option>
+            </select>
+            <button>Submit</button>
+        </form>
+
+    </div>
+    <div class="list">
+        <h1>Expense details</h1>
+      <!-- <div class="row">
+        <h6>kfljkn</h6>
+        <h6>fkdjf</h6>
+        <button class="btn btn-danger btn-sm float-right delete">X</button>
+      </div>
+    </div> -->
+   <script>
+    let sub_btn=document.querySelector("button")
+
+// sub_btn.addEventListener("click",(e)=>{
+//     e.preventDefault()
+//    let name=e.target.parentElement.children[1].value
+//    let email=e.target.parentElement.children[3].value
+//    localStorage.setItem("username",name)
+//    localStorage.setItem("email",email)
+//    console.log(localStorage.getItem("username"))
+//    console.log(localStorage.getItem("email"))
+// })
+
+//storing user details as object
+
+// sub_btn.addEventListener("click",(e)=>{
+//     e.preventDefault()
+//        let name=e.target.parentElement.children[1].value
+//    let email=e.target.parentElement.children[3].value
+//    let user_details={
+//     "username":name,
+//     "email":email
+//    }
+
+//    localStorage.setItem("user_details",JSON.stringify(user_details))
+//    console.log(JSON.parse(localStorage.getItem("user_details")))
+// })
+
+//storing multiple user details
+let input_box=document.querySelectorAll("input")
+let selected_value=document.querySelector("select")
+
+sub_btn.addEventListener("click",(e)=>{
+    e.preventDefault()
+       let exp=e.target.parentElement.children[1].value
+   let desc=e.target.parentElement.children[3].value
+  let category=selected_value.value
+   let user_details={
+    "expense":exp,
+    "desc":desc,
+    "cat":category
+   }
+
+   let user_arr=localStorage.getItem("expense_details")?JSON.parse(localStorage.getItem("expense_details")):[]
+   user_arr.push(user_details)
+
+   localStorage.setItem("expense_details",JSON.stringify(user_arr))
+   window.location.reload()
+   console.log(JSON.parse(localStorage.getItem("expense_details")))
+})
+
+//displaying user details
+let display_user=JSON.parse(localStorage.getItem("expense_details"))
+let list_div=document.querySelector(".list")
+display_user.forEach(e => {
+    // <div class="row">
+    //     <h6>kfljkn</h6>
+    //     <h6>fkdjf</h6>
+    //     <h6>kdhk</h6>
+    //     <button class="btn btn-danger btn-sm float-right delete">X</button>
+    //<button class="btn btn-sm btn-sm float-right edit">✏️</button>
+    //   </div>
+
+    let row_div=document.createElement("div")
+    row_div.setAttribute("class","row")
+
+    let name_h6=document.createElement("h6")
+    name_h6.innerText=e.expense
+
+    let email_h6=document.createElement("h6")
+    email_h6.innerText=e.desc
+    let cat_h6=document.createElement("h6")
+    cat_h6.innerText=e.cat
+    let del_button=document.createElement("button")
+    del_button.setAttribute("class","btn btn-danger btn-sm float-right delete")
+    del_button.innerText="X"
+    let ed_btn=document.createElement("button")
+    ed_btn.setAttribute("class","btn btn-sm btn-sm float-right edit")
+    ed_btn.innerText="✏️"
+    
+
+    row_div.append(name_h6)
+    row_div.append(email_h6)
+    row_div.append(cat_h6)
+    row_div.append(del_button)
+    row_div.append(ed_btn)
+    list_div.append(row_div)
+});
+
+//deleting user
+let delete_btn=document.querySelectorAll(".delete")
+delete_btn.forEach((e)=>{
+    console.log(e)
+    e.addEventListener("click",(el)=>{
+        let key_name=el.target.parentElement.children[0].innerText
+        
+        display_user.find((element)=>{
+           if(element.expense==key_name){
+           let ind=display_user.indexOf(element)
+           display_user.splice(ind,1)
+           localStorage.setItem("expense_details",JSON.stringify(display_user))
+           window.location.reload()
+           }
+        })
+
+    })
+})
+
+//Editing user
+let edit_button=document.querySelectorAll(".edit")
+
+edit_button.forEach((e)=>{
+    e.addEventListener("click",(el)=>{
+        let val=el.target.parentElement.children[0].innerText
+// el.target.parentElement.children[1].innerHTML=`<input value=${val}>`
+input_box[0].value=el.target.parentElement.children[0].innerText
+         input_box[1].value=el.target.parentElement.children[1].innerText
+
+         let key_name=el.target.parentElement.children[0].innerText
+        
+        display_user.find((element)=>{
+           if(element.expense==key_name){
+           let ind=display_user.indexOf(element)
+           display_user.splice(ind,1)
+           localStorage.setItem("expense_details",JSON.stringify(display_user))
+           }
+        })
+    })
+})
+
+</script>
+</body>
+</html>
